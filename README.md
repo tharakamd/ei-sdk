@@ -1,1 +1,2 @@
-# mi-apk
+# Enterprise Integrator SDK
+
