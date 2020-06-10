@@ -1,4 +1,4 @@
-package org.wso2.mi.apk;
+package org.wso2.ei.util;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.collect.Iterators;
@@ -22,13 +22,13 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.util.PayloadHelper;
 import org.apache.synapse.util.xpath.SynapseJsonPath;
 import org.jaxen.JaxenException;
-import org.wso2.mi.apk.collectors.CsvCollector;
-import org.wso2.mi.apk.collectors.JsonArrayCollector;
-import org.wso2.mi.apk.collectors.JsonObjectCollector;
-import org.wso2.mi.apk.exceptions.SimpleMessageContextException;
-import org.wso2.mi.apk.models.IndexedElement;
-import org.wso2.mi.apk.models.IndexedEntry;
-import org.wso2.mi.apk.models.XmlNamespace;
+import org.wso2.ei.util.collectors.CsvCollector;
+import org.wso2.ei.util.collectors.JsonArrayCollector;
+import org.wso2.ei.util.collectors.JsonObjectCollector;
+import org.wso2.ei.util.exceptions.SimpleMessageContextException;
+import org.wso2.ei.util.models.IndexedElement;
+import org.wso2.ei.util.models.IndexedEntry;
+import org.wso2.ei.util.models.XmlNamespace;
 
 import java.io.IOException;
 import java.io.StringReader;

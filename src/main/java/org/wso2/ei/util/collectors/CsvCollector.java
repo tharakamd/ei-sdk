@@ -17,12 +17,12 @@
  *
  */
 
-package org.wso2.mi.apk.collectors;
+package org.wso2.ei.util.collectors;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Sets;
-import org.wso2.mi.apk.SimpleMessageContext;
-import org.wso2.mi.apk.exceptions.SimpleMessageContextException;
+import org.wso2.ei.util.SimpleMessageContext;
+import org.wso2.ei.util.exceptions.SimpleMessageContextException;
 
 import java.io.IOException;
 import java.io.StringWriter;

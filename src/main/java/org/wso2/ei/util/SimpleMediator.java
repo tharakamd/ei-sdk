@@ -1,4 +1,4 @@
-package org.wso2.mi.apk;
+package org.wso2.ei.util;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;

@@ -1,4 +1,4 @@
-package org.wso2.mi.apk.models;
+package org.wso2.ei.util.models;
 
 /**
  * Represents a namespace in XML schema

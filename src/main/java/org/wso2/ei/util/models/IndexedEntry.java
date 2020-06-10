@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.mi.apk.models;
+package org.wso2.ei.util.models;
 
 import com.google.gson.JsonElement;
 

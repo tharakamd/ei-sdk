@@ -17,27 +17,39 @@
  *
  */
 
-package org.wso2.mi.apk.exceptions;
+package org.wso2.ei.util.models;
 
 /**
- * RuntimeException representing a exception happen in processing the SimpleMessageContext. This can be thrown by the
- * payload processors and data transformers.
- * This exception can be used to stop the mediator process return false as the response for mediation flow.
+ * Represents an element along with its position in an array or list.
  */
-public class SimpleMessageContextException extends RuntimeException {
+public class IndexedElement<E> {
 
-    public SimpleMessageContextException(Throwable cause) {
+    private int index;
+    private E element;
 
-        super(cause);
+    public IndexedElement(int index, E element) {
+
+        this.index = index;
+        this.element = element;
     }
 
-    public SimpleMessageContextException(String message) {
+    public int getIndex() {
 
-        super(message);
+        return index;
     }
 
-    public SimpleMessageContextException(String message, Throwable cause) {
+    public void setIndex(int index) {
 
-        super(message, cause);
+        this.index = index;
+    }
+
+    public E getElement() {
+
+        return element;
+    }
+
+    public void setElement(E element) {
+
+        this.element = element;
     }
 }

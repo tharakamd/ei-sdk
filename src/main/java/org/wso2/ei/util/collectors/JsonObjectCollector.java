@@ -17,12 +17,12 @@
  *
  */
 
-package org.wso2.mi.apk.collectors;
+package org.wso2.ei.util.collectors;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.wso2.mi.apk.SimpleMessageContext;
+import org.wso2.ei.util.SimpleMessageContext;
 
 import java.util.Map;
 import java.util.Set;
