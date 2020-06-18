@@ -1,6 +1,7 @@
 package org.wso2.ei.util;
 
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Iterators;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -22,6 +23,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.util.PayloadHelper;
 import org.apache.synapse.util.xpath.SynapseJsonPath;
 import org.jaxen.JaxenException;
+import org.wso2.carbon.connector.core.util.ConnectorUtils;
 import org.wso2.ei.util.collectors.CsvCollector;
 import org.wso2.ei.util.collectors.JsonArrayCollector;
 import org.wso2.ei.util.collectors.JsonObjectCollector;
@@ -32,6 +34,7 @@ import org.wso2.ei.util.models.XmlNamespace;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -376,6 +379,7 @@ public final class SimpleMessageContext {
 
         messageContext.getEnvelope().getBody().getFirstElement().detach();
         messageContext.getEnvelope().getBody().addChild(element);
+        setPayloadType("application/xml");
     }
 
     /**
@@ -573,6 +577,13 @@ public final class SimpleMessageContext {
         return getJsonArrayStream(jsonElement.getAsJsonArray());
     }
 
+    /**
+     * Get content of a CData content in XML
+     *
+     * @param xPath      xPath for the CData section
+     * @param namespaces namespaces to apply with the xPath
+     * @return CData content as a String
+     */
     private String getCDataContent(String xPath, XmlNamespace... namespaces) {
 
         List<OMElement> results = getXmlElements(xPath, namespaces);
@@ -605,13 +616,8 @@ public final class SimpleMessageContext {
      */
     public Stream<String[]> getCsvArrayStream(int linesToSkip) {
 
-        try {
-            List<String[]> rows = readCsvPayload(linesToSkip);
-            return rows.stream();
-        } catch (IOException e) {
-            log.error("Error parsing CSV payload", e);
-            return Stream.empty();
-        }
+        List<String[]> rows = getCsvPayload(linesToSkip);
+        return rows.stream();
     }
 
     /**
@@ -622,14 +628,9 @@ public final class SimpleMessageContext {
      */
     public Stream<IndexedElement<String[]>> getCsvArrayStreamWithIndex(int linesToSkip) {
 
-        try {
-            List<String[]> rows = readCsvPayload(linesToSkip);
-            return IntStream.range(0, rows.size())
-                    .mapToObj(i -> new IndexedElement<>(i, rows.get(i)));
-        } catch (IOException e) {
-            log.error("Error parsing CSV payload", e);
-            return Stream.empty();
-        }
+        List<String[]> rows = getCsvPayload(linesToSkip);
+        return IntStream.range(0, rows.size())
+                .mapToObj(i -> new IndexedElement<>(i, rows.get(i)));
     }
 
     /**
@@ -638,7 +639,7 @@ public final class SimpleMessageContext {
      * @param linesToSkip Number of lines to skip from header of CSV
      * @return String[] representation of the CSV payload
      */
-    public List<String[]> readCsvPayload(int linesToSkip) throws IOException {
+    public List<String[]> getCsvPayload(int linesToSkip) {
 
         String payloadText = getTextPayload();
 
@@ -652,7 +653,36 @@ public final class SimpleMessageContext {
         CSVReader csvReader =
                 new CSVReader(new StringReader(csvText), CSVReader.DEFAULT_SEPARATOR, CSVReader.DEFAULT_QUOTE_CHARACTER,
                         linesToSkip);
-        return csvReader.readAll();
+        try {
+            return csvReader.readAll();
+        } catch (Exception e) {
+            throw new SimpleMessageContextException("Error reading csv payload", e);
+        }
+    }
+
+    /**
+     * Set given payload as CSV
+     *
+     * @param data List of String array representing rows of CSV
+     */
+    public void setCsvPayload(List<String[]> data) {
+
+        StringWriter stringWriter = new StringWriter();
+        CSVWriter csvWriter = new CSVWriter(stringWriter,
+                CSVWriter.DEFAULT_SEPARATOR,
+                CSVWriter.NO_QUOTE_CHARACTER,
+                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                CSVWriter.DEFAULT_LINE_END);
+
+        csvWriter.writeAll(data);
+        try {
+            csvWriter.close();
+            stringWriter.flush();
+            String resultPayload = stringWriter.toString();
+            setTextPayload(resultPayload);
+        } catch (IOException e) {
+            throw new SimpleMessageContextException(e);
+        }
     }
 
     /**
@@ -660,7 +690,7 @@ public final class SimpleMessageContext {
      *
      * @param text String to set as the current payload
      */
-    public void setCsvPayload(String text) {
+    public void setTextPayload(String text) {
 
         setPayloadType("text/plain");
 
@@ -779,6 +809,29 @@ public final class SimpleMessageContext {
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, payloadType);
         axis2MessageContext.setProperty(Constants.Configuration.CONTENT_TYPE, payloadType);
+    }
+
+    /**
+     * Get template parameters when using in a connector
+     *
+     * @param paramName parameter index
+     * @return parameter content
+     */
+    public Object lookupTemplateParameter(String paramName) {
+
+        return ConnectorUtils.lookupTemplateParamater(messageContext, paramName);
+    }
+
+    /**
+     * Get template parameters when using in a connector
+     *
+     * @param index parameter index
+     * @return parameter content
+     */
+    public Object lookupTemplateParameter(int index) {
+
+        return ConnectorUtils.lookupTemplateParamater(messageContext, index);
+
     }
 
     /**

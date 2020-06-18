@@ -98,7 +98,7 @@ public class CsvCollector implements Collector<String[], List<String[]>, Boolean
                 csvWriter.close();
                 stringWriter.flush();
                 String resultPayload = stringWriter.toString();
-                simpleMessageContext.setCsvPayload(resultPayload);
+                simpleMessageContext.setTextPayload(resultPayload);
             } catch (IOException e) {
                 throw new SimpleMessageContextException(e);
             }

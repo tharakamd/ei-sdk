@@ -1,6 +1,7 @@
 package org.wso2.ei.util;
 
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.mediators.AbstractMediator;
 
@@ -22,6 +23,9 @@ public abstract class SimpleMediator extends AbstractMediator {
         try {
             mediate(new SimpleMessageContext(messageContext));
             return true;
+        } catch (SynapseException e) {
+            getLog(messageContext).error(e);
+            throw e;
         } catch (RuntimeException e) {
             getLog(messageContext).error(e);
             return false;
@@ -48,4 +52,5 @@ public abstract class SimpleMediator extends AbstractMediator {
 
         return super.getLog(simpleMessageContext.getMessageContext());
     }
+
 }
