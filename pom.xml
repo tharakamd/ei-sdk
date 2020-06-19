@@ -17,6 +17,7 @@
         <junit-jupiter.version>5.6.2</junit-jupiter.version>
         <mockito.version>2.21.0</mockito.version>
         <mockito-junit.version>2.23.0</mockito-junit.version>
+        <powermock.version>2.0.7</powermock.version>
         <hamcrest.version>2.1</hamcrest.version>
     </properties>
 
@@ -71,6 +72,25 @@
             <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
